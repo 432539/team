@@ -1,0 +1,8 @@
+__pycache__
+*.pyc
+config.json
+_cfg_*
+log.txt
+team绑卡.txt
+requirements.txt
+.dockerignore

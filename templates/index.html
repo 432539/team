@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黑金控台 · Codex × ChatGPT | PLUS/TEAM 批量版</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--panel:#111;--panel2:#161616;--surface:#1c1c1c;
+  --border:rgba(180,155,100,.12);--border-hi:rgba(201,169,110,.25);
+  --gold:#c9a96e;--gold-light:#e2cb97;--gold-dim:#8a7548;--gold-glow:rgba(201,169,110,.1);
+  --green:#5cb985;--red:#d45b5b;--cyan:#7ab8c4;--blue:#6ea5c9;
+  --text:#d4d0c8;--dim:#706b60;
+  --serif:'SimSun','STSong','Songti SC','Georgia',serif;
+  --sans:'Microsoft YaHei','PingFang SC','Hiragino Sans GB','WenQuanYi Micro Hei',sans-serif;
+  --mono:'Cascadia Code','Consolas','Courier New',monospace;
+}
+html{font-size:13px;background:var(--bg)}
+body{min-height:100vh;color:var(--text);font-family:var(--sans);line-height:1.6}
+
+.shell{max-width:920px;margin:0 auto;padding:20px 16px 60px}
+
+.hdr{text-align:center;padding:30px 20px 22px}
+.hdr::after{content:'';display:block;width:80px;height:1px;margin:14px auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.hdr h1{font-family:var(--serif);font-size:1.5rem;font-weight:900;color:var(--gold);letter-spacing:3px}
+.hdr .sub{font-size:.8rem;color:var(--dim);margin-top:4px;letter-spacing:1px}
+.hdr .tag{display:inline-block;margin-top:8px;font-size:.68rem;color:var(--gold-dim);letter-spacing:1px;border:1px solid rgba(201,169,110,.2);padding:2px 12px}
+
+.sec{margin-bottom:16px}
+.sec-hd{display:flex;align-items:center;gap:8px;padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--border)}
+.sec-hd .num{font-family:var(--mono);font-size:.72rem;color:var(--gold-dim);min-width:20px}
+.sec-hd .title{font-family:var(--serif);font-size:.9rem;font-weight:700;color:var(--gold);letter-spacing:1.5px}
+.sec-hd .extra{margin-left:auto}
+
+.get-link{font-size:.7rem;color:var(--cyan);text-decoration:none;border:1px solid rgba(122,184,196,.3);padding:2px 10px;transition:all .25s}
+.get-link:hover{background:rgba(122,184,196,.08);border-color:var(--cyan);color:#fff}
+
+.fg{margin-bottom:10px}
+.fg label{display:block;font-size:.75rem;color:var(--dim);letter-spacing:.7px;margin-bottom:4px;font-weight:500}
+.fg input,.fg select,.fg textarea{
+  width:100%;padding:9px 12px;background:var(--panel);color:var(--text);
+  font-family:var(--sans);font-size:.85rem;border:1px solid var(--border);outline:none;
+  transition:border-color .3s,box-shadow .3s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);box-shadow:0 0 0 1px rgba(201,169,110,.2),inset 0 0 20px var(--gold-glow)}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,.12);font-size:.8rem}
+.fg textarea{
+  font-family:var(--mono);font-size:.78rem;line-height:1.7;
+  resize:none;height:80px;overflow-y:auto;white-space:nowrap;overflow-x:hidden;
+}
+.fg textarea::-webkit-scrollbar{width:4px}
+.fg textarea::-webkit-scrollbar-track{background:transparent}
+.fg textarea::-webkit-scrollbar-thumb{background:rgba(201,169,110,.2);border-radius:2px}
+.fg textarea::-webkit-scrollbar-thumb:hover{background:rgba(201,169,110,.35)}
+.fg select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23706b60'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.fg select option{background:var(--panel);color:var(--text)}
+
+.row{display:flex;gap:12px}
+.row>.col{flex:1;min-width:0}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:4px 0 16px}
+
+.example{font-size:.68rem;color:var(--gold-dim);margin-top:3px;letter-spacing:.3px}
+
+.tabs{display:flex;gap:0;margin-bottom:12px}
+.tab{flex:1;padding:10px;text-align:center;font-size:.85rem;font-weight:600;letter-spacing:2px;cursor:pointer;border:1px solid var(--border);background:var(--panel);color:var(--dim);transition:all .25s}
+.tab:first-child{border-right:none}
+.tab.active{background:rgba(201,169,110,.08);color:var(--gold);border-color:var(--gold)}
+.tab:hover:not(.active){background:rgba(201,169,110,.04);color:var(--gold-dim)}
+
+#startBtn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:14px;margin-top:6px;
+  background:transparent;color:var(--gold);font-family:var(--serif);
+  font-size:1rem;font-weight:700;letter-spacing:3px;
+  border:1px solid var(--gold);cursor:pointer;position:relative;overflow:hidden;transition:all .3s;
+}
+#startBtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,169,110,.08),transparent);opacity:0;transition:opacity .3s}
+#startBtn:hover:not(:disabled)::before{opacity:1}
+#startBtn:hover:not(:disabled){box-shadow:0 0 30px rgba(201,169,110,.12);border-color:var(--gold-light)}
+#startBtn:disabled{opacity:.35;cursor:not-allowed}
+#startBtn .spinner{display:none;width:15px;height:15px;border:2px solid rgba(201,169,110,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+#startBtn.loading .spinner{display:block}
+#startBtn.loading .btn-label{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 进度区 */
+#progressArea{display:none;margin-top:16px}
+
+.task-grid{display:flex;flex-direction:column;gap:2px;margin-bottom:12px;max-height:280px;overflow-y:auto}
+.task-grid::-webkit-scrollbar{width:3px}
+.task-grid::-webkit-scrollbar-thumb{background:rgba(201,169,110,.2);border-radius:2px}
+
+.task-row{
+  display:grid;grid-template-columns:36px 1fr 100px 80px 36px;gap:8px;align-items:center;
+  padding:8px 12px;background:var(--panel);border:1px solid var(--border);
+  font-size:.78rem;cursor:pointer;transition:background .2s;
+}
+.task-row:hover{background:var(--panel2)}
+.task-row.selected{background:rgba(201,169,110,.06);border-color:var(--border-hi)}
+.task-row .idx{font-family:var(--mono);color:var(--dim);font-size:.72rem}
+.task-row .at{font-family:var(--mono);color:var(--text);font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task-row .card{font-family:var(--mono);color:var(--dim);font-size:.72rem;text-align:center}
+
+.badge{font-size:.65rem;padding:2px 8px;text-align:center;letter-spacing:.5px;font-weight:600}
+.badge.pending{color:var(--dim);border:1px solid var(--border)}
+.badge.running{color:var(--gold);border:1px solid rgba(201,169,110,.3);animation:pulse 1.5s infinite}
+.badge.success{color:var(--green);border:1px solid rgba(92,185,133,.3)}
+.badge.failed{color:var(--red);border:1px solid rgba(212,91,91,.3)}
+.badge.skipped{color:var(--blue);border:1px solid rgba(110,165,201,.3)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+.view-btn{font-size:.65rem;color:var(--cyan);cursor:pointer;text-align:center}
+.view-btn:hover{color:#fff}
+
+.stats{display:flex;gap:16px;padding:8px 0;font-size:.75rem;color:var(--dim)}
+.stats .s{display:flex;align-items:center;gap:4px}
+.stats .dot{width:6px;height:6px;border-radius:50%}
+.stats .dot.g{background:var(--green)}
+.stats .dot.r{background:var(--red)}
+.stats .dot.y{background:var(--gold)}
+.stats .dot.b{background:var(--blue)}
+
+.log-wrap{border:1px solid var(--border);background:var(--bg)}
+.log-bar{display:flex;align-items:center;gap:6px;padding:6px 12px;border-bottom:1px solid var(--border);background:var(--panel)}
+.log-bar .led{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,80%,100%{opacity:1}90%{opacity:.3}}
+.log-bar span{font-size:.68rem;color:var(--dim);letter-spacing:.5px}
+.log-box{padding:8px 12px;max-height:350px;overflow-y:auto;font-family:var(--mono);font-size:.72rem;line-height:1.8;color:rgba(255,255,255,.4)}
+.log-box::-webkit-scrollbar{width:3px}
+.log-box::-webkit-scrollbar-thumb{background:rgba(201,169,110,.2);border-radius:2px}
+.log-line{white-space:pre-wrap;word-break:break-all}
+.log-line.ok{color:var(--green)}.log-line.err{color:var(--red)}.log-line.warn{color:var(--gold)}.log-line.info{color:var(--cyan)}.log-line.step-mark{color:var(--gold);font-weight:700}
+
+#resultBanner{display:none;padding:18px 20px;text-align:center;margin-top:12px;animation:fadeIn .4s}
+#resultBanner.success{border:1px solid rgba(92,185,133,.3);background:rgba(92,185,133,.06);color:var(--green)}
+#resultBanner.fail{border:1px solid rgba(212,91,91,.3);background:rgba(212,91,91,.06);color:var(--red)}
+#resultBanner .r-icon{font-size:1.3rem;display:block;margin-bottom:2px;font-family:var(--serif);font-weight:700}
+#resultBanner .r-msg{font-size:.88rem;font-weight:600;letter-spacing:1px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:640px){.row{flex-direction:column;gap:8px}.hdr h1{font-size:1.15rem}.task-row{grid-template-columns:28px 1fr 70px 60px 28px;font-size:.7rem}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="hdr">
+    <h1>黑金控台 · Codex × ChatGPT</h1>
+    <div class="sub">PLUS / TEAM 批量自动开通</div>
+    <div class="tag">QQ群 382446</div>
+  </div>
+
+  <form id="payForm" autocomplete="off">
+
+    <!-- 订阅类型 -->
+    <div class="tabs">
+      <div class="tab active" data-plan="plus">PLUS</div>
+      <div class="tab" data-plan="team">TEAM</div>
+    </div>
+    <input type="hidden" id="plan_type" value="plus">
+
+    <!-- 01 AT -->
+    <div class="sec">
+      <div class="sec-hd">
+        <span class="num">01</span>
+        <span class="title">Access Token</span>
+        <span class="extra"><a href="https://chatgpt.com/api/auth/session" target="_blank" class="get-link">获取 AT</a></span>
+      </div>
+      <div class="fg">
+        <label>Access Token (一行一个, 支持批量)</label>
+        <textarea id="ats" placeholder="eyJhbGciOiJSUzI1NiIsInR5cCI6...&#10;eyJhbGciOiJSUzI1NiIsInR5cCI6...&#10;一行一个 Access Token"></textarea>
+        <div class="example">从 chatgpt.com/api/auth/session 获取 accessToken 字段, 每行一个 AT</div>
+      </div>
+    </div>
+
+    <!-- 02 银行卡 -->
+    <div class="sec">
+      <div class="sec-hd">
+        <span class="num">02</span>
+        <span class="title">银行卡信息</span>
+      </div>
+      <div class="fg">
+        <label>银行卡 (一行一条, 格式: 卡号|月|年|CVC)</label>
+        <textarea id="cards" placeholder="4242424242424242|12|2027|123&#10;5555555555554444|01|2028|456&#10;一行一张卡: 卡号|月|年|CVC"></textarea>
+        <div class="example">格式: 卡号|有效月|有效年|CVC -- 用 | 分隔, 每行一张卡</div>
+      </div>
+    </div>
+
+    <!-- 03 代理 -->
+    <div class="sec">
+      <div class="sec-hd">
+        <span class="num">03</span>
+        <span class="title">代理与并发</span>
+      </div>
+      <div class="row">
+        <div class="col" style="flex:3"><div class="fg">
+          <label>代理地址</label>
+          <input type="text" id="proxy" placeholder="http://用户名:密码@地址:端口 (可留空)">
+        </div></div>
+        <div class="col" style="flex:.8"><div class="fg">
+          <label>并发线程数</label>
+          <select id="threads">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="5">5</option>
+            <option value="8">8</option>
+          </select>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- 04 地址 -->
+    <div class="sec">
+      <div class="sec-hd">
+        <span class="num">04</span>
+        <span class="title">账单地址 (所有卡共用)</span>
+      </div>
+      <div class="row">
+        <div class="col" style="flex:.7"><div class="fg">
+          <label>国家</label>
+          <select id="country">
+            <option value="KR" selected>韩国 (KR)</option>
+            <option value="US">美国 (US)</option>
+            <option value="JP">日本 (JP)</option>
+            <option value="GB">英国 (GB)</option>
+            <option value="CA">加拿大 (CA)</option>
+            <option value="DE">德国 (DE)</option>
+            <option value="FR">法国 (FR)</option>
+            <option value="AU">澳大利亚 (AU)</option>
+            <option value="SG">新加坡 (SG)</option>
+            <option value="HK">香港 (HK)</option>
+          </select>
+        </div></div>
+        <div class="col"><div class="fg"><label>省/州</label><input type="text" id="state" placeholder="Seoul"></div></div>
+        <div class="col"><div class="fg"><label>城市</label><input type="text" id="city" placeholder="Seoul"></div></div>
+      </div>
+      <div class="row" style="margin-top:2px">
+        <div class="col" style="flex:2"><div class="fg"><label>详细地址</label><input type="text" id="line1" placeholder="405, Hangang-daero, Yongsan-gu"></div></div>
+        <div class="col" style="flex:.7"><div class="fg"><label>邮编</label><input type="text" id="postal_code" placeholder="04050"></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <button type="submit" id="startBtn">
+      <span class="btn-label">批量开通</span>
+      <span class="spinner"></span>
+    </button>
+  </form>
+
+  <!-- 进度 -->
+  <div id="progressArea">
+    <div class="sec" style="margin-bottom:0">
+      <div class="sec-hd"><span class="num">&bull;</span><span class="title">批量任务进度</span></div>
+    </div>
+
+    <div class="stats" id="statsBar">
+      <div class="s"><span class="dot g"></span><span id="sOk">0</span> 成功</div>
+      <div class="s"><span class="dot r"></span><span id="sFail">0</span> 失败</div>
+      <div class="s"><span class="dot y"></span><span id="sRun">0</span> 进行中</div>
+      <div class="s"><span class="dot b"></span><span id="sWait">0</span> 等待</div>
+    </div>
+
+    <div class="task-grid" id="taskGrid"></div>
+
+    <div class="log-wrap">
+      <div class="log-bar"><span class="led" id="logLed"></span><span id="logTitle">全部任务日志</span><span style="margin-left:auto;font-size:.65rem;color:var(--cyan);cursor:pointer;letter-spacing:.5px" onclick="showAllLogs()">显示全部</span></div>
+      <div class="log-box" id="logBox"></div>
+    </div>
+
+    <div id="resultBanner">
+      <span class="r-icon"></span>
+      <span class="r-msg"></span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const SAVE_KEYS=['ats','cards','proxy','threads','plan_type','country','state','city','line1','postal_code'];
+function save(){const d={};SAVE_KEYS.forEach(k=>{const e=$('#'+k);if(e)d[k]=e.value});localStorage.setItem('gpt_batch',JSON.stringify(d))}
+function load(){try{const d=JSON.parse(localStorage.getItem('gpt_batch')||'{}');SAVE_KEYS.forEach(k=>{const e=$('#'+k);if(e&&d[k]!=null)e.value=d[k]});
+  const p=d.plan_type||'plus';$('#plan_type').value=p;document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t.dataset.plan===p)})}catch(e){}}
+load();
+SAVE_KEYS.forEach(k=>{const e=$('#'+k);if(e){e.addEventListener('input',save);e.addEventListener('change',save)}});
+
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');$('#plan_type').value=this.dataset.plan;save();
+  });
+});
+
+let batchId=null,tasks=[],streams={},allLogs=[],selectedTask=null,pollTimer=null;
+
+function classify(m){
+  if(/成功|OK|完成|succeeded|开通成功/.test(m))return'ok';
+  if(/失败|ERROR|异常|RuntimeError|拒绝|错误/.test(m))return'err';
+  if(/等待|重试|耐心/.test(m))return'warn';
+  if(/\[\d+\/6\]/.test(m))return'step-mark';
+  if(/指纹|Session|商户|密钥/.test(m))return'info';
+  return'';
+}
+function taskLabel(taskId){
+  const idx=tasks.findIndex(t=>t.id===taskId);
+  return idx>=0?`#${idx+1}`:'#?';
+}
+function appendLogLine(box,text,cls){
+  const d=document.createElement('div');
+  d.className='log-line '+cls;d.textContent=text;
+  box.appendChild(d);box.scrollTop=box.scrollHeight;
+}
+function addLog(taskId,m){
+  if(!streams[taskId])streams[taskId]=[];
+  streams[taskId].push(m);
+  const tagged=`[${taskLabel(taskId)}] ${m}`;
+  allLogs.push({taskId,tagged,raw:m});
+  const box=$('#logBox');
+  if(!selectedTask){
+    appendLogLine(box,'> '+tagged,classify(m));
+  }else if(selectedTask===taskId){
+    appendLogLine(box,'> '+m,classify(m));
+  }
+}
+function showAllLogs(){
+  selectedTask=null;
+  const box=$('#logBox');box.innerHTML='';
+  document.querySelectorAll('.task-row').forEach(r=>r.classList.remove('selected'));
+  $('#logTitle').textContent='全部任务日志';
+  allLogs.forEach(e=>appendLogLine(box,'> '+e.tagged,classify(e.raw)));
+}
+function showTaskLog(taskId){
+  if(selectedTask===taskId){showAllLogs();return}
+  selectedTask=taskId;
+  const box=$('#logBox');box.innerHTML='';
+  document.querySelectorAll('.task-row').forEach(r=>r.classList.toggle('selected',r.dataset.tid===taskId));
+  const idx=tasks.findIndex(t=>t.id===taskId);
+  $('#logTitle').textContent=`任务 #${idx+1} 日志 (点击取消筛选)`;
+  (streams[taskId]||[]).forEach(m=>appendLogLine(box,'> '+m,classify(m)));
+}
+
+function connectSSE(taskId){
+  const es=new EventSource('/api/stream/'+taskId);
+  es.onmessage=function(ev){
+    try{
+      const d=JSON.parse(ev.data);
+      if(d.type==='log')addLog(taskId,d.message);
+      else if(d.type==='result'){addLog(taskId,(d.success?'[SUCCESS] ':'[FAILED] ')+d.message)}
+      else if(d.type==='done'){es.close();updateStatuses()}
+    }catch(e){}
+  };
+  es.onerror=function(){es.close()};
+}
+
+function updateStatuses(){
+  if(!batchId)return;
+  fetch('/api/batch-status/'+batchId).then(r=>r.json()).then(data=>{
+    let ok=0,fail=0,run=0,wait=0;
+    data.tasks.forEach((t,i)=>{
+      const row=document.querySelector(`.task-row[data-tid="${t.id}"]`);
+      if(!row)return;
+      const badge=row.querySelector('.badge');
+      badge.className='badge '+t.status;
+      const labels={pending:'等待',running:'进行中',success:'成功',failed:'失败',skipped:'已订阅'};
+      badge.textContent=labels[t.status]||t.status;
+      if(t.status==='success'||t.status==='skipped')ok++;
+      else if(t.status==='failed')fail++;
+      else if(t.status==='running')run++;
+      else wait++;
+    });
+    $('#sOk').textContent=ok;$('#sFail').textContent=fail;$('#sRun').textContent=run;$('#sWait').textContent=wait;
+    if(data.batch_status==='done'){
+      clearInterval(pollTimer);pollTimer=null;
+      $('#startBtn').disabled=false;$('#startBtn').classList.remove('loading');
+      const total=ok+fail;
+      const b=$('#resultBanner');b.style.display='block';
+      if(fail===0){b.className='success';b.querySelector('.r-icon').textContent='ALL SUCCESS';b.querySelector('.r-msg').textContent=`${ok} 个账号全部成功`}
+      else{b.className='fail';b.querySelector('.r-icon').textContent='COMPLETED';b.querySelector('.r-msg').textContent=`成功 ${ok} / 失败 ${fail}`}
+    }
+  }).catch(()=>{});
+}
+
+$('#payForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const btn=$('#startBtn');if(btn.disabled)return;
+
+  streams={};allLogs=[];selectedTask=null;
+  $('#taskGrid').innerHTML='';$('#logBox').innerHTML='';$('#logTitle').textContent='全部任务日志';
+  const rb=$('#resultBanner');rb.style.display='none';rb.className='';
+
+  const body={};
+  SAVE_KEYS.forEach(k=>{const e=$('#'+k);if(e)body[k]=e.value.trim()});
+
+  btn.disabled=true;btn.classList.add('loading');
+  $('#progressArea').style.display='block';
+
+  try{
+    const res=await fetch('/api/batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await res.json();
+    if(!res.ok){throw new Error(data.error||'请求失败')}
+
+    batchId=data.batch_id;tasks=data.tasks;
+    const grid=$('#taskGrid');
+    tasks.forEach((t,i)=>{
+      const row=document.createElement('div');
+      row.className='task-row';row.dataset.tid=t.id;
+      row.innerHTML=`<div class="idx">#${i+1}</div><div class="at">${t.at_mask}</div><div class="card">${t.card_mask}</div><div class="badge pending">等待</div><div class="view-btn">查看</div>`;
+      row.addEventListener('click',()=>showTaskLog(t.id));
+      grid.appendChild(row);
+      connectSSE(t.id);
+    });
+
+    pollTimer=setInterval(updateStatuses,2000);
+
+  }catch(err){
+    addLog('_err','[错误] '+err.message);
+    btn.disabled=false;btn.classList.remove('loading');
+  }
+});
+</script>
+</body>
+</html>
