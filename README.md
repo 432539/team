@@ -86,7 +86,7 @@ flowchart LR
 ### 本地运行
 
 ```bash
-git clone <你的仓库地址>.git
+git clone https://github.com/432539/team.git
 cd team
 pip install -r requirements.txt
 python app.py
