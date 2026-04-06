@@ -6,19 +6,27 @@
 
 ---
 
-### 为什么 GitHub 页面上没有「介绍」？
+### 为什么 About 里还是「No description…」？
 
-仓库名旁边那一行 **Description（简介）** 不会从 README 自动生成，需要你在网页里填一次：
+那一块 **只能在你登录 GitHub 之后在网页里保存**，和 README、Git 推送无关。按下面做一遍就会消失：
 
-1. 打开仓库：[github.com/432539/team](https://github.com/432539/team)  
-2. 点右上角 **⚙️ About** 右侧的齿轮（或进入 **Settings → General** 最上方 **Repository name** 下面的 **Description**）  
-3. **Description** 粘贴下面**英文**或**中文**任选其一（推荐中英文各保存一次的话，Description 里用英文更利于搜索）：
+1. **先登录** [github.com](https://github.com)（必须是你有权限的账号，能打开 [432539/team](https://github.com/432539/team)）。  
+2. 打开仓库代码页：[https://github.com/432539/team](https://github.com/432539/team)  
+3. 看页面 **右侧栏**，找到灰色小标题 **About**。  
+4. 点 **About 这一行右侧的齿轮图标 ⚙️**（在「About」文字右边，不是顶栏 Settings）。  
+5. 弹出框里第一项就是 **Description**，把下面**任选一框**整段复制进去；**Topics** 里逐个添加标签（输入后回车）。  
+6. 点弹出框里的 **Save changes**。刷新页面后 About 就会显示简介和标签。
 
-| 填在哪里 | 建议粘贴内容 |
-|----------|----------------|
-| **Description**（英文） | `Codex × ChatGPT Plus/Team checkout console — batch tasks, SSE logs, Docker. QQ group: 432539.` |
-| **Description**（中文） | `黑金控台：Codex × ChatGPT 订阅支付编排，PLUS/TEAM 批量、实时日志、Docker。QQ群432539。` |
-| **Website**（可选） | 若你有文档站或演示地址再填；没有可留空 |
+若找不到齿轮：把浏览器窗口拉宽（右侧栏被折叠时有时不显示）；或换 Chrome/Edge 无痕窗口重新登录试一次。
+
+**Description** 粘贴（任选其一）：
+
+| 语言 | 复制到 Description |
+|------|---------------------|
+| 英文 | `Codex × ChatGPT Plus/Team checkout console — batch tasks, SSE logs, Docker. QQ group: 432539.` |
+| 中文 | `黑金控台：Codex × ChatGPT 订阅支付编排，PLUS/TEAM 批量、实时日志、Docker。QQ群432539。` |
+
+**Website** 没有可留空。官方说明：[Customizing your repository's profile](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repositorys-profile)。
 
 **Topics（主题标签）**：在 About 里添加 `chatgpt` `openai` `codex` `stripe` `flask` `docker` `python` `sse`
 
