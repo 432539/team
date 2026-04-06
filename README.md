@@ -1,32 +1,38 @@
-<div align="center">
-
 # 黑金控台 · BlackGold Control
 
-**Codex × ChatGPT — Plus / Team 订阅链路自动化控制台**
+**Codex × ChatGPT — ChatGPT Plus / Team 订阅支付编排控制台**
 
-*Codex 社区共建 · 暗金 Web UI · 批量并发 · SSE 实时日志 · Docker 一键部署*
+面向 ChatGPT 的暗金风格 Web 控制台：Access Token 批量换 Checkout、Stripe 流程自动化、多线程任务、**SSE 实时日志**、**Docker** 一键部署。社区交流 **QQ 群 432539**。
+
+---
+
+### 为什么 GitHub 页面上没有「介绍」？
+
+仓库名旁边那一行 **Description（简介）** 不会从 README 自动生成，需要你在网页里填一次：
+
+1. 打开仓库：[github.com/432539/team](https://github.com/432539/team)  
+2. 点右上角 **⚙️ About** 右侧的齿轮（或进入 **Settings → General** 最上方 **Repository name** 下面的 **Description**）  
+3. **Description** 粘贴下面**英文**或**中文**任选其一（推荐中英文各保存一次的话，Description 里用英文更利于搜索）：
+
+| 填在哪里 | 建议粘贴内容 |
+|----------|----------------|
+| **Description**（英文） | `Codex × ChatGPT Plus/Team checkout console — batch tasks, SSE logs, Docker. QQ group: 432539.` |
+| **Description**（中文） | `黑金控台：Codex × ChatGPT 订阅支付编排，PLUS/TEAM 批量、实时日志、Docker。QQ群432539。` |
+| **Website**（可选） | 若你有文档站或演示地址再填；没有可留空 |
+
+**Topics（主题标签）**：在 About 里添加 `chatgpt` `openai` `codex` `stripe` `flask` `docker` `python` `sse`
+
+---
+
+<div align="center">
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-Web-000000?style=flat&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
-**社区交流 QQ 群：432539**（加群请注明来意：开源项目交流；若你有官方加群链接，可自行替换到本 README）
+**QQ 群：432539**（开源项目交流）
 
 </div>
-
----
-
-## GitHub 仓库标题与描述（复制即用）
-
-在 GitHub 创建或编辑仓库时，可直接粘贴下面文案（可按需微调）。
-
-| 用途 | 建议内容 |
-|------|----------|
-| **Repository name** | `blackgold-codex-chatgpt` 或 `codex-chatgpt-checkout`（全小写、短横线） |
-| **Description（一行简介）** | `Codex × ChatGPT Plus/Team checkout console — batch tasks, SSE logs, Docker.` |
-| **中文简介（放 README 已够用，也可写在网页 About）** | `黑金控台：Codex 社区 × ChatGPT 订阅支付编排，支持 PLUS/TEAM 批量与实时日志。` |
-
-**Topics 标签建议**：`chatgpt` `openai` `codex` `stripe` `flask` `docker` `python` `sse` `checkout`
 
 ---
 
